@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="#000000">
+
+    <Button
+        android:id="@+id/newMarker"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.76"
+        android:text="@string/newMarker" />
+
+    <Button
+        android:id="@+id/saveMarker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/saveMarker" 
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/loadMarker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loadMarker"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/clearMarker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/clearMarker" 
+        android:visibility="gone"/>
+
+</LinearLayout>
