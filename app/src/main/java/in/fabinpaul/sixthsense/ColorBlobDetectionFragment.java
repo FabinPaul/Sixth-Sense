@@ -6,12 +6,16 @@ import android.hardware.Camera.Size;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.Toast;
 
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
@@ -24,11 +28,12 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.List;
+import java.util.ListIterator;
 
-public class ColorBlobDetection extends Fragment implements OnTouchListener,
+public class ColorBlobDetectionFragment extends Fragment implements OnTouchListener,
 		CvCameraViewListener2 {
 
-	private static final String TAG = "SixthSense: ColorBlobdetector";
+	private static final String TAG = ColorBlobDetectionFragment.class.getSimpleName();
 
 	private boolean[] mIsColorSelected = { false, false, false, false };
 	private Mat mRgba;
@@ -40,8 +45,9 @@ public class ColorBlobDetection extends Fragment implements OnTouchListener,
 	private boolean colorMarkerSet = false;
 	private Communicator comm;
 	private CameraView mOpenCvCameraView;
+    private List<Size> mResolutionList;
 
-	@Override
+    @Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		Log.i(TAG, "onActivityCreated");
@@ -49,6 +55,7 @@ public class ColorBlobDetection extends Fragment implements OnTouchListener,
 				R.id.color_blob_detection_activity_surface_view);
 		mOpenCvCameraView.setCvCameraViewListener(this);
 		comm = (Communicator) getActivity();
+        setHasOptionsMenu(true);
 	}
 
 	@Override
@@ -70,7 +77,42 @@ public class ColorBlobDetection extends Fragment implements OnTouchListener,
 				container, true);
 	}
 
-	@Override
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        mResolutionList = getResolutionList();
+        if (mResolutionList == null)
+            return ;
+        MenuItem[] resolutionMenuItems = new MenuItem[mResolutionList.size()];
+        Log.i(TAG, "Menu created");
+
+        ListIterator<Size> resolutionItr = mResolutionList
+                .listIterator();
+        int idx = 0;
+        while (resolutionItr.hasNext()) {
+            android.hardware.Camera.Size element = resolutionItr.next();
+            resolutionMenuItems[idx] = menu.add(2, idx, Menu.NONE,
+                    Integer.valueOf(element.width).toString() + "x"
+                            + Integer.valueOf(element.height).toString());
+            idx++;
+        }
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.i(TAG, "called onOptionsItemSelected; selected item: " + item);
+        int id = item.getItemId();
+        android.hardware.Camera.Size resolution = mResolutionList.get(id);
+        setResolution(resolution);
+        resolution = getResolution();
+        String caption = Integer.valueOf(resolution.width).toString() + "x"
+                + Integer.valueOf(resolution.height).toString();
+        Toast.makeText(getActivity(), caption, Toast.LENGTH_SHORT).show();
+
+        return true;
+    }
+
+    @Override
 	public void onDetach() {
 		super.onDetach();
 	}
@@ -84,6 +126,7 @@ public class ColorBlobDetection extends Fragment implements OnTouchListener,
 			mBlobColorHsv[i] = new Scalar(255);
 		}
 		CONTOUR_COLOR = new Scalar(255, 0, 0, 255);
+        getActivity().invalidateOptionsMenu();
 
 	}
 
@@ -306,7 +349,7 @@ public class ColorBlobDetection extends Fragment implements OnTouchListener,
 		Log.i(TAG, "OpenCV loaded successfully");
 		Log.i(TAG, "" + mOpenCvCameraView);
 		mOpenCvCameraView.enableView();
-		mOpenCvCameraView.setOnTouchListener(ColorBlobDetection.this);
+		mOpenCvCameraView.setOnTouchListener(ColorBlobDetectionFragment.this);
 
 	}
 

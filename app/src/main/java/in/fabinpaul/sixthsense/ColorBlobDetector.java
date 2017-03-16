@@ -1,9 +1,5 @@
 package in.fabinpaul.sixthsense;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -12,6 +8,10 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 public class ColorBlobDetector {
     // Lower and Upper bounds for range checking in HSV color space
     private Scalar mLowerBound = new Scalar(0);
@@ -19,7 +19,7 @@ public class ColorBlobDetector {
     // Minimum contour area in percent for contours filtering
     private static double mMinContourArea = 0.1;
     // Color radius for range checking in HSV color space
-    private Scalar mColorRadius = new Scalar(5,30,50,0);
+    private Scalar mColorRadius = new Scalar(5, 30, 50, 0);
     private Mat mSpectrum = new Mat();
     private List<MatOfPoint> mContours = new ArrayList<MatOfPoint>();
     Point marker;
@@ -36,8 +36,8 @@ public class ColorBlobDetector {
     }
 
     public void setHsvColor(Scalar hsvColor) {
-        double minH = (hsvColor.val[0] >= mColorRadius.val[0]) ? hsvColor.val[0]-mColorRadius.val[0] : 0;
-        double maxH = (hsvColor.val[0]+mColorRadius.val[0] <= 255) ? hsvColor.val[0]+mColorRadius.val[0] : 255;
+        double minH = (hsvColor.val[0] >= mColorRadius.val[0]) ? hsvColor.val[0] - mColorRadius.val[0] : 0;
+        double maxH = (hsvColor.val[0] + mColorRadius.val[0] <= 255) ? hsvColor.val[0] + mColorRadius.val[0] : 255;
 
         mLowerBound.val[0] = minH;
         mUpperBound.val[0] = maxH;
@@ -51,10 +51,10 @@ public class ColorBlobDetector {
         mLowerBound.val[3] = 0;
         mUpperBound.val[3] = 255;
 
-        Mat spectrumHsv = new Mat(1, (int)(maxH-minH), CvType.CV_8UC3);
+        Mat spectrumHsv = new Mat(1, (int) (maxH - minH), CvType.CV_8UC3);
 
-        for (int j = 0; j < maxH-minH; j++) {
-            byte[] tmp = {(byte)(minH+j), (byte)255, (byte)255};
+        for (int j = 0; j < maxH - minH; j++) {
+            byte[] tmp = {(byte) (minH + j), (byte) 255, (byte) 255};
             spectrumHsv.put(0, j, tmp);
         }
 
@@ -97,8 +97,8 @@ public class ColorBlobDetector {
         each = contours.iterator();
         while (each.hasNext()) {
             MatOfPoint contour = each.next();
-            if (Imgproc.contourArea(contour) > mMinContourArea*maxArea) {
-                Core.multiply(contour, new Scalar(4,4), contour);
+            if (Imgproc.contourArea(contour) > mMinContourArea * maxArea) {
+                Core.multiply(contour, new Scalar(4, 4), contour);
                 mContours.add(contour);
             }
         }
@@ -107,15 +107,14 @@ public class ColorBlobDetector {
     public List<MatOfPoint> getContours() {
         return mContours;
     }
-    
-    public Point getXY(){
-    	marker=new Point();
-    	for(int i=0;i<mMask.rows();i++)
-    	{
-    		for(int j=0;j<mMask.cols();j++){
-    			
-    		}
-    	}
-    	return marker;
+
+    public Point getXY() {
+        marker = new Point();
+        for (int i = 0; i < mMask.rows(); i++) {
+            for (int j = 0; j < mMask.cols(); j++) {
+
+            }
+        }
+        return marker;
     }
 }
